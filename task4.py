@@ -1,36 +1,61 @@
-def phrase_list(employees: list):     #через создание нового списка из элемента исходного списка
-    for n in range(len(employees)):
-        employee = employees[n]
-        list_aux = list(employee.split())
-        for i in range(len(list_aux)):
-            if i == len(list_aux) - 1:
-                name = list_aux[i].capitalize()
-                print(f"'Привет, {name}!'")
+'''
+*(вместо задачи 3) Написать функцию thesaurus_adv(), принимающую в качестве аргументов
+строки в формате «Имя Фамилия» и возвращающую словарь, в котором ключи — первые буквы
+фамилий, а значения — словари, реализованные по схеме предыдущего задания и содержащие
+записи, в которых фамилия начинается с соответствующей буквы. Например:
+# >>> thesaurus_adv("Иван Сергеев", "Инна Серова", "Петр
+Алексеев", "Илья Иванов", "Анна Савельева")
+{
+    "А": {
+        "П": ["Петр Алексеев"]
+        },
+    "И": {
+        "И": ["Илья Иванов"]
+        },
+    "С": {
+            "И": ["Иван Сергеев", "Инна Серова"],
+            "А": ["Анна Савельева"]
+        }
+}
+Как поступить, если потребуется сортировка по ключам?
+'''
 
 
-def phrases_without_list(employees: list):    # без создания нового списка, по условию
-    for emp in employees:
-        name = ''
-        i = -1
-        while emp[i] != ' ':
-            name = name + emp[i]
-            i = i - 1
-        name = name[::-1]
-        print(f"'Привет, {name.capitalize()}!'")
+def thesaurus(*fullnames):
+    # YOUR CODE HERE
+    random_dict = {}
+    key_s_list = []
+
+    def surname_key(fullname):
+        fullname_as_list = fullname.split()
+        surname = fullname_as_list[1]
+
+        return surname[0]
+
+    for fullname in fullnames:
+        key_letter = surname_key(fullname)
+        if not random_dict.__contains__(key_letter):
+            key_s_list.append(key_letter)
+    key_s_list.sort()
+
+    for key_letter in key_s_list:
+        for fullname in fullnames:
+            key_s = surname_key(fullname)
+            if key_s == key_letter:
+                if not random_dict.__contains__(key_s):
+                    fullname_it = filter(lambda fullname: key_s == surname_key(fullname), fullnames)
+                    fullname_list = list(fullname_it)
+                    surname_letter_dict = {}
+                    for el in fullname_list:
+                        key_n = el[0]
+                        if not surname_letter_dict.__contains__(key_n):
+                            name_it = filter(lambda el: key_n == el[0], fullname_list)
+                            surname_letter_dict.setdefault(key_n, list(name_it))
+                    random_dict.setdefault(key_s, surname_letter_dict)
+
+    return random_dict # YOUR CODE HERE
 
 
-def phrases_slice(employees: list):       # без создания списка, срез
-    for emp in employees:
-        for i in reversed(range(len(emp))):   # не получился цикл in range(len(emp), 0, -1)
-            if emp[i] == ' ':
-                name = emp[(i+1):]
-                print(f"'Привет, {name.capitalize()}!'")
-                break
-
-
-if __name__ == '__main__':
-    emp_list = ['Инженер-конструктор Игорь', 'главный бухгалтер МАРИНА',
-                'токарь высшего разряда нИКОЛАЙ', 'директор аэлита']
-    phrase_list(emp_list)
-    phrases_without_list(emp_list)
-    phrases_slice(emp_list)
+if __name__ == "__main__":
+    print(thesaurus("Иван Сергеев", "Инна Серова",
+                    "Петр Алексеев", "Илья Иванов", "Анна Савельева"))

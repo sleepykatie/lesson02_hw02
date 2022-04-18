@@ -1,28 +1,37 @@
-my_list = ['в', '5', 'часов', '17', 'минут', 'температура',
-           'воздуха', 'была', '+5', 'градусов']
-
-for i in range(len(my_list)):
-    element = my_list[i]
-    marker = element.isdigit()
-    if marker:
-        value = int(element)
-        my_list[i] = ('{:0>2d}'.format(value))
-        my_list[i] = f'"{my_list[i]}"'
-    else:
-        value_aux = ''
-        for s in element:
-            marker_symbol = s.isdigit()
-            if marker_symbol:
-                value = int(s)
-                symbol = ('{:0>2d}'.format(value))
-                s = str(symbol)
-            value_aux += s
-            if marker_symbol:
-                my_list[i] = f'"{value_aux}"'
-
-answer = ''
-for i in range(len(my_list)):
-    answer = answer + my_list[i] + ' '
-print(answer)
+'''
+ *(вместо задачи 1) Доработать предыдущую функцию в num_translate_adv(): реализовать
+корректную работу с числительными, начинающимися с заглавной буквы — результат тоже
+должен быть с заглавной. Например:
+# >>> num_translate_adv("One")
+"Один"
+# >>> num_translate_adv("two")
+"два"
+'''
 
 
+def num_translate_adv(number: str):
+    # YOUR CODE HERE
+
+    num_1_to_10 = {'one': 'один',
+                   'two': 'два',
+                   'three': 'три',
+                   'four': 'четыре',
+                   'five': 'пять',
+                   'six': 'шесть',
+                   'seven': 'семь',
+                   'eight': 'восемь',
+                   'nine': 'девять',
+                   'ten': 'десять'}
+
+    result = num_1_to_10.get(number)
+    if number.istitle():
+        value = num_1_to_10.get(number.casefold())
+        result = value.title()
+
+    return result   # YOUR CODE HERE
+
+if __name__ == "__main__":
+
+    print(num_translate_adv('One'))
+    print(num_translate_adv('six'))
+    print(num_translate_adv('TeN'))
