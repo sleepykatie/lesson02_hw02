@@ -1,36 +1,10 @@
-def phrase_list(employees: list):     #через создание нового списка из элемента исходного списка
-    for n in range(len(employees)):
-        employee = employees[n]
-        list_aux = list(employee.split())
-        for i in range(len(list_aux)):
-            if i == len(list_aux) - 1:
-                name = list_aux[i].capitalize()
-                print(f"'Привет, {name}!'")
+src = [300, 2, 12, 44, 1, 1, 4, 10, 7, 1, 78, 123, 55]
+check_src = [src[0] + 1]
+# print(type(check_src))
+# print(src)
+check_src.extend(src)
+#print(check_src)
 
-
-def phrases_without_list(employees: list):    # без создания нового списка, по условию
-    for emp in employees:
-        name = ''
-        i = -1
-        while emp[i] != ' ':
-            name = name + emp[i]
-            i = i - 1
-        name = name[::-1]
-        print(f"'Привет, {name.capitalize()}!'")
-
-
-def phrases_slice(employees: list):       # без создания списка, срез
-    for emp in employees:
-        for i in reversed(range(len(emp))):   # не получился цикл in range(len(emp), 0, -1)
-            if emp[i] == ' ':
-                name = emp[(i+1):]
-                print(f"'Привет, {name.capitalize()}!'")
-                break
-
-
-if __name__ == '__main__':
-    emp_list = ['Инженер-конструктор Игорь', 'главный бухгалтер МАРИНА',
-                'токарь высшего разряда нИКОЛАЙ', 'директор аэлита']
-    phrase_list(emp_list)
-    phrases_without_list(emp_list)
-    phrases_slice(emp_list)
+values_list = [num for num, check_num in zip(src, check_src)
+                if num > check_num]
+print(values_list)
