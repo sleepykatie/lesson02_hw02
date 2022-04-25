@@ -1,58 +1,27 @@
-def order_ascend(price: list):      # B
-    print(sorted(price))
-    if price == basic_price_list:
-        print('Список не изменился')
-    else:
-        print('Список изменился')
-    return price
+src = [2, 2, 2, 7, 23, 1, 44, 44, 3, 2, 10, 7, 4, 11]
 
 
-def order_descend(price: list):      #C
-    price.sort(reverse=True)
-    print(price)
-    if price == basic_price_list:
-        print('Список не изменился')
-    else:
-        print('Список изменился')
-    return price
+def unique_el_set(source):
+    # у меня получилось в обеих функциях через метод .count, и вторая - короче.
+    # так и должно быть?
+
+    src_one_time = set(source)
+
+    for number in src_one_time:
+        if source.count(number) > 1:
+            while source.count(number) != 0:
+                i = source.index(number)
+                source.pop(i)
+    return source
 
 
-def price_format(price: list):   # A
-    price_list_formatted = []
-    for number in price:
-        if type(number) == int:
-            number = float(number)
-        rub = number // 1
-        kop = int(round((number % 1 * 100), 2))
-        kop_int = ('{:0>2d}'.format(kop))
-        number = f'{int(rub)} руб. {kop_int} коп.'
-        price_list_formatted.append(number)
-        result = ', '.join(price_list_formatted)
-    return result
+def unique_el_list(source):
 
-
-def highest_price(price: list):    # D
-    price.sort()
-    result = price[(len(price)-5):len(price)]
-    return result
+    unique_numbers = [num for num in source if source.count(num) == 1]
+    return unique_numbers
 
 
 if __name__ == '__main__':
-    basic_price_list = [57.8, 46.51, 97, 48.03, 52.78, 67.4,
-                  94.3, 30, 26.86, 34.7, 74.05, 6.59, 80.04]
-    price_list = [57.8, 46.51, 97, 48.03, 52.78, 67.4,
-                  94.3, 30, 26.86, 34.7, 74.05, 6.59, 80.04]
-    print('Task B')
-    price_list_ascend = order_ascend(price_list)
-    print(price_list_ascend)
-    print('Task C')
-    price_list_descend = order_descend(price_list)
-    print(price_list_descend)
-    print('Task A')
-    print(price_format(basic_price_list))
-    print('Task D')
-    print(highest_price(basic_price_list))
 
-
-
-
+    print(unique_el_list(src))
+    print(unique_el_set(src))
