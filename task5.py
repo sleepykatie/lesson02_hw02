@@ -1,58 +1,37 @@
-def order_ascend(price: list):      # B
-    print(sorted(price))
-    if price == basic_price_list:
-        print('Список не изменился')
-    else:
-        print('Список изменился')
-    return price
+import sys
 
 
-def order_descend(price: list):      #C
-    price.sort(reverse=True)
-    print(price)
-    if price == basic_price_list:
-        print('Список не изменился')
-    else:
-        print('Список изменился')
-    return price
+def users_hobby(user_names, hobby, result_file):
+    user_names_list = []
+    hobby_list = []
+    with open(user_names, 'r', encoding='utf-8') as f:
+        key = f.readline()
+        while key:
+            key = key.replace(',', ' ').replace('\n', '')
+            user_names_list.append(key)
+            key = f.readline()
 
+    with open(hobby, 'r', encoding='utf-8') as f:
+        value = f.readline()
+        while value:
+            value = value.replace('\n', '')
+            hobby_list.append(value)
+            value = f.readline()
+    # print(user_names_list)
+    # print(hobby_list)
+    with open(result_file, 'w', encoding='utf-8') as f:
+        for i in range(len(user_names_list)):
+            if len(hobby_list) > len(user_names_list):
+                sys.exit(1)
+            if i < len(hobby_list):
+                f.writelines(f'{user_names_list[i]}: {hobby_list[i]}\n')
+            else:
+                f.writelines(f'{user_names_list[i]}: None\n')
 
-def price_format(price: list):   # A
-    price_list_formatted = []
-    for number in price:
-        if type(number) == int:
-            number = float(number)
-        rub = number // 1
-        kop = int(round((number % 1 * 100), 2))
-        kop_int = ('{:0>2d}'.format(kop))
-        number = f'{int(rub)} руб. {kop_int} коп.'
-        price_list_formatted.append(number)
-        result = ', '.join(price_list_formatted)
-    return result
-
-
-def highest_price(price: list):    # D
-    price.sort()
-    result = price[(len(price)-5):len(price)]
-    return result
+    return str(result_file)
 
 
 if __name__ == '__main__':
-    basic_price_list = [57.8, 46.51, 97, 48.03, 52.78, 67.4,
-                  94.3, 30, 26.86, 34.7, 74.05, 6.59, 80.04]
-    price_list = [57.8, 46.51, 97, 48.03, 52.78, 67.4,
-                  94.3, 30, 26.86, 34.7, 74.05, 6.59, 80.04]
-    print('Task B')
-    price_list_ascend = order_ascend(price_list)
-    print(price_list_ascend)
-    print('Task C')
-    price_list_descend = order_descend(price_list)
-    print(price_list_descend)
-    print('Task A')
-    print(price_format(basic_price_list))
-    print('Task D')
-    print(highest_price(basic_price_list))
 
-
-
-
+    print(users_hobby(sys.argv[1], sys.argv[2], sys.argv[3]))
+    #print(sys.argv)

@@ -1,36 +1,36 @@
-def phrase_list(employees: list):     #через создание нового списка из элемента исходного списка
-    for n in range(len(employees)):
-        employee = employees[n]
-        list_aux = list(employee.split())
-        for i in range(len(list_aux)):
-            if i == len(list_aux) - 1:
-                name = list_aux[i].capitalize()
-                print(f"'Привет, {name}!'")
+import sys
 
 
-def phrases_without_list(employees: list):    # без создания нового списка, по условию
-    for emp in employees:
-        name = ''
-        i = -1
-        while emp[i] != ' ':
-            name = name + emp[i]
-            i = i - 1
-        name = name[::-1]
-        print(f"'Привет, {name.capitalize()}!'")
+def users_hobby(user_names, hobby):
+    user_names_list = []
+    hobby_list = []
+    with open(user_names, 'r', encoding='utf-8') as f:
+        key = f.readline()
+        while key:
+            key = key.replace(',', ' ').replace('\n', '')
+            user_names_list.append(key)
+            key = f.readline()
 
+    with open(hobby, 'r', encoding='utf-8') as f:
+        value = f.readline()
+        while value:
+            value = value.replace('\n', '')
+            hobby_list.append(value)
+            value = f.readline()
+    # print(user_names_list)
+    # print(hobby_list)
+    with open('users_hobby.txt', 'w', encoding='utf-8') as f:
+        for i in range(len(user_names_list)):
+            if len(hobby_list) > len(user_names_list):
+                sys.exit(1)
+            if i < len(hobby_list):
+                f.writelines(f'{user_names_list[i]}: {hobby_list[i]}\n')
+            else:
+                f.writelines(f'{user_names_list[i]}: None\n')
 
-def phrases_slice(employees: list):       # без создания списка, срез
-    for emp in employees:
-        for i in reversed(range(len(emp))):   # не получился цикл in range(len(emp), 0, -1)
-            if emp[i] == ' ':
-                name = emp[(i+1):]
-                print(f"'Привет, {name.capitalize()}!'")
-                break
+    return 'users_hobby.txt'
 
 
 if __name__ == '__main__':
-    emp_list = ['Инженер-конструктор Игорь', 'главный бухгалтер МАРИНА',
-                'токарь высшего разряда нИКОЛАЙ', 'директор аэлита']
-    phrase_list(emp_list)
-    phrases_without_list(emp_list)
-    phrases_slice(emp_list)
+
+    print(users_hobby('users.csv', 'hobby.csv'))
