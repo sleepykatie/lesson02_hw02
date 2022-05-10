@@ -1,57 +1,66 @@
-def order_ascend(price: list):      # B
-    print(sorted(price))
-    if price == basic_price_list:
-        print('Список не изменился')
-    else:
-        print('Список изменился')
-    return price
+import os
+import json
 
 
-def order_descend(price: list):      #C
-    price.sort(reverse=True)
-    print(price)
-    if price == basic_price_list:
-        print('Список не изменился')
-    else:
-        print('Список изменился')
-    return price
+def file_extension(file_name):
+    index = 0
+    for i in range(-1, -len(file_name), -1):
+        if file_name[i] == '.':
+            index = i
+    file_ext = file_name[(len(file_name) + index +1):len(file_name):]
+    return file_ext
 
 
-def price_format(price: list):   # A
-    price_list_formatted = []
-    for number in price:
-        if type(number) == int:
-            number = float(number)
-        rub = number // 1
-        kop = int(round((number % 1 * 100), 2))
-        kop_int = ('{:0>2d}'.format(kop))
-        number = f'{int(rub)} руб. {kop_int} коп.'
-        price_list_formatted.append(number)
-        result = ', '.join(price_list_formatted)
-    return result
-
-
-def highest_price(price: list):    # D
-    price.sort()
-    result = price[(len(price)-5):len(price)]
-    return result
+def folder_stat(dir_path, key_list):
+    result_dict = {}
+    max_size = 0
+    for num in key_list:
+        result_dict.update({10 ** num: (0, [])})
+    # print(result_dict)
+    for file in os.scandir(dir_path):
+        ext_list = []
+        if 10**key_list[-1] >= file.stat().st_size >= 10**key_list[-2]:
+            value = list(result_dict[10**key_list[-1]])
+            files_quantity = value[0] + 1
+            ext = file_extension(os.path.basename(file))
+            if ext_list.count(ext) == 0:
+                ext_list.append(ext)
+            result_dict[10 ** key_list[-1]] = (files_quantity, ext_list)
+        elif 10 ** key_list[-2] > file.stat().st_size >= 10 ** key_list[-3]:
+            value = list(result_dict[10 ** key_list[-2]])
+            files_quantity = value[0] + 1
+            ext = file_extension(os.path.basename(file))
+            if ext_list.count(ext) == 0:
+                ext_list.append(ext)
+            result_dict[10 ** key_list[-2]] = (files_quantity, ext_list)
+        elif 10 ** key_list[-3] > file.stat().st_size >= 10 ** key_list[-4]:
+            value = list(result_dict[10 ** key_list[-3]])
+            files_quantity = value[0] + 1
+            ext = file_extension(os.path.basename(file))
+            if ext_list.count(ext) == 0:
+                ext_list.append(ext)
+            result_dict[10 ** key_list[-3]] = (files_quantity, ext_list)
+        elif file.stat().st_size < 10 ** key_list[-4]:
+            value = list(result_dict[10 ** key_list[-4]])
+            files_quantity = value[0] + 1
+            ext = file_extension(os.path.basename(file))
+            if ext_list.count(ext) == 0:
+                ext_list.append(ext)
+            result_dict[10 ** key_list[-4]] = (files_quantity, ext_list)
+        if file.stat().st_size > max_size:
+            max_size = file.stat().st_size
+    if max_size > 10**key_list[-1]:
+        print(f'attention, max file size more than {10**key_list[-1]}')
+    return result_dict
 
 
 if __name__ == '__main__':
-    basic_price_list = [57.8, 46.51, 97, 48.03, 52.78, 67.4,
-                  94.3, 30, 26.86, 34.7, 74.05, 6.59, 80.04]
-    price_list = [57.8, 46.51, 97, 48.03, 52.78, 67.4,
-                  94.3, 30, 26.86, 34.7, 74.05, 6.59, 80.04]
-    print('Task B')
-    price_list_ascend = order_ascend(price_list)
-    print(price_list_ascend)
-    print('Task C')
-    price_list_descend = order_descend(price_list)
-    print(price_list_descend)
-    print('Task A')
-    print(price_format(basic_price_list))
-    print('Task D')
-    print(highest_price(basic_price_list))
+
+    stat_keys = [2, 3, 4, 5]
+    print(folder_stat(os.path.join(os.getcwd(), 'task4', 'some_data'), stat_keys))
+    with open('some_data_summary.json', 'w') as f:
+        json.dump(folder_stat(os.path.join(os.getcwd(), 'task4', 'some_data'), stat_keys), f)
+
 
 
 
