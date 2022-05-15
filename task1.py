@@ -1,19 +1,32 @@
-import os
-
-# print(os.getcwd())
-root_path = os.path.join(os.getcwd(), 'task1')
-os.makedirs(root_path, exist_ok=True)
-# print(root_path)
+import re
 
 
-def start_project(*project_dirs):
+def email_parse(email):
+    result_dict = {}
+    # EMAIL_RE = re.compile(r'\w*@\w*\.\w*')
+    EMAIL_RE = re.compile(r'^[a-zA-Z0-9_.]+@[a-zA-Z]+\.[a-zA-Z]+$')
+    EMAIL_USERNAME_RE = re.compile(r'^.*?(?=@)')
+    # EMAIL_USERNAME_RE = re.compile(r'^(\w*[.])\w*[^@]')
+    EMAIL_DOMAIN_RE = re.compile(r'[^@]\w*\.\w*$')
 
-    os.makedirs(os.path.join(root_path, 'my_project'), exist_ok=True)
-    dir_list = [*project_dirs]
-    for project_dir in dir_list:
-        os.makedirs(os.path.join(root_path, 'my_project', project_dir), exist_ok=True)
+    if not EMAIL_RE.match(email):
+        print(f'wrong e-mail {email}')
+        raise ValueError
+    else:
+        name_part = EMAIL_USERNAME_RE.findall(email)
+        domain_part = EMAIL_DOMAIN_RE.findall(email)
+        result_dict[name_part[0]] = domain_part[0]
+
+    return result_dict
 
 
 if __name__ == '__main__':
 
-    start_project('settings', 'mainapp', 'adminapp', 'authapp')
+    e_mails = ['anna_k@mail.ru',
+               'alena3478@gmail.com',
+               'alisa@yandex.ru',
+               'alina.alina@gmail.com',
+               'alla_ivanova@gmailcom',
+               'arina-567@mail.ru']
+    for e_mail in e_mails:
+        print(email_parse(e_mail))
