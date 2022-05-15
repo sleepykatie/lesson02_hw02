@@ -1,53 +1,35 @@
-import os
-import yaml
+import random
+import re
 
+random_num_list = []
+for i in range(0, 30):
+    num = random.randint(1, 100000)
+    random_num_list.append(num)
 
-def dict_proc(current_dict, current_dict_path):
+REMOTE_ADDR_RE = re.compile(r'^\S*')
+# REMOTE_ADDR_OLD_RE = re.compile(r'^(?:\d*\.\d*\.\d*\.\d*)[^\s]')
+# REMOTE_ADDR_NEW_RE = re.compile(r'(?:\w{4}\:)+[^\s]')
+REQ_DATETIME_RE = re.compile(r'(?<=\[)(.*)(?=\])')
+REQ_TYPE_RE = re.compile(r'(?<=\]\s\")(.*)(?=\s\/)')
+REQ_RESOURCE_RE = re.compile(r'(?<=\")(\w*)\s(.*)(?=\sH)')
+RESP_CODE_SIZE_RE = re.compile(r'(?<=\"\s)(\d*)\s(\d*)(?=\s)')
 
-    for key in current_dict:
-        # print('makedir', current_dict_path)
-        os.makedirs(current_dict_path, exist_ok=True)
-        element = current_dict[key]
-        if type(element) == list:
-            current_path = os.path.join(current_dict_path, key)
-            os.makedirs(current_path, exist_ok=True)
-            # print('makedir', current_path)
-            list_proc(element, current_path)
-        elif type(element) == dict:
-            current_path = os.path.join(current_dict_path, key)
-            dict_proc(element, current_path)
-
-
-def list_proc(current_list, current_list_path):
-    for el in current_list:
-        if type(el) == dict:
-            dict_proc(el, current_list_path)
-        elif type(el) == str:
-            # print('makefile', current_list_path)
-            open(os.path.join(current_list_path, el), 'w').close()
-
-
-if __name__ == '__main__':
-    root_path = os.path.join(os.getcwd(), 'task2')
-    os.makedirs(root_path, exist_ok=True)
-    with open(os.path.join(root_path, 'config.yaml'), 'r') as f:
-        # config = yaml.safe_load(f)
-        # config = yaml.load(f, Loader=yaml.FullLoader)
-        config = yaml.full_load(f)
-
-    dict_proc(config, root_path)
-
-
-'''
-{'my_project': 
-    {'settings': ['__init__.py', 'dev.py', 'prod.ru'], 
-    'mainapp': ['__init__.py', 'models.py', 'views.py', 
-        {'templates': [{'mainapp': ['base.html', 'index.html']}]}
-        ], 
-    'authapp': ['__init__.py', 'models.py', 'views.py', 
-        {'templates': [{'authapp': ['base.html', 'index.html']}]}
-        ]
-        }
-        }
-'''
-
+with open('nginx_log.txt', 'r', encoding='utf-8') as f:
+    text_line = f.readline()
+    counter = 0
+    while text_line:
+        # print(text_line)
+        el0_address = REMOTE_ADDR_RE.findall(text_line)
+        el01_datetime = REQ_DATETIME_RE.findall(text_line)
+        el02_type = REQ_TYPE_RE.findall(text_line)
+        el03_resource = REQ_RESOURCE_RE.search(text_line).group(2)
+        el04_code = RESP_CODE_SIZE_RE.search(text_line).group(1)
+        el05_size = RESP_CODE_SIZE_RE.search(text_line).group(2)
+        parsed_raw = (el0_address[0], el01_datetime[0], el02_type[0], el03_resource, el04_code, el05_size)
+        for num in random_num_list:
+            if num == counter:
+                print(text_line)
+                print(parsed_raw)
+        text_line = f.readline()
+        counter += 1
+        #print(parsed_raw)
