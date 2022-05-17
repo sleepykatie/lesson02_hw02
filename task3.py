@@ -1,56 +1,40 @@
-import os
-import yaml
-import shutil
+from functools import wraps
 
 
-def dict_proc(current_dict, current_dict_path):
-
-    for key in current_dict:
-        os.makedirs(current_dict_path, exist_ok=True)
-        element = current_dict[key]
-        if type(element) == list:
-            current_path = os.path.join(current_dict_path, key)
-            os.makedirs(current_path, exist_ok=True)
-            list_proc(element, current_path)
-        elif type(element) == dict:
-            current_path = os.path.join(current_dict_path, key)
-            dict_proc(element, current_path)
-
-
-def list_proc(current_list, current_list_path):
-    for el in current_list:
-        if type(el) == dict:
-            dict_proc(el, current_list_path)
-        elif type(el) == str:
-            open(os.path.join(current_list_path, el), 'w').close()
+def first_dec(func):
+    #print('This is function', func)
+    @wraps(func)
+    def type_logger(*args, **kwargs):
+        #print('args:', args)
+        #print('kwargs:', kwargs)
+        result = {}
+        for el in args:
+            result[el] = type(el)
+        for value in kwargs.values():
+            result[value] = type(value)
+        print("Argument's type:", result)
+        print(func(*args, **kwargs), 'Type of result calc function:', type(func(*args, **kwargs)))
+        print('With function name:', func.__name__, result)
+        print('*' * 15)
+        return func(*args, **kwargs)
+    return type_logger
 
 
-if __name__ == '__main__':
-    root_path = os.path.join(os.getcwd(), 'task3')
-    os.makedirs(root_path, exist_ok=True)
-    with open(os.path.join(root_path, 'config_temp.yaml'), 'r') as f:
-        config = yaml.full_load(f)
-
-    dict_proc(config, root_path)
-
-    templates_path = os.path.join(os.getcwd(), 'task3', 'templates')
-    os.makedirs(templates_path, exist_ok=True)
-    for root, dirs_in_root, files_in_root in os.walk(os.path.join(root_path, 'my_project')):
-        if root.__contains__('templates') and not root.__contains__('templates/'):
-            # print(root)
-            old_path = root
-            shutil.copytree(old_path, templates_path, dirs_exist_ok=True)
+@first_dec
+def calc_cube(x):
+    return x ** 3
 
 
-'''
-{'my_project': 
-    {'settings': ['__init__.py', 'dev.py', 'prod.ru'], 
-    'mainapp': ['__init__.py', 'models.py', 'views.py', 
-        {'templates': [{'mainapp': ['base.html', 'index.html']}]}
-        ], 
-    'authapp': ['__init__.py', 'models.py', 'views.py', 
-        {'templates': [{'authapp': ['base.html', 'index.html']}]}
-        ]
-        }
-        }
-'''
+@first_dec
+def calc_sum(x, y, z):
+    return x + y + z
+
+
+@first_dec
+def calc_sum_named(x=0, y=0, z=0):
+    return x + y + z
+
+
+a = calc_cube(5)
+b = calc_sum(1, 2, 3.5)
+c = calc_sum_named(y=2.5, x=1.5, z=3)
