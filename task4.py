@@ -1,36 +1,31 @@
-def phrase_list(employees: list):     #через создание нового списка из элемента исходного списка
-    for n in range(len(employees)):
-        employee = employees[n]
-        list_aux = list(employee.split())
-        for i in range(len(list_aux)):
-            if i == len(list_aux) - 1:
-                name = list_aux[i].capitalize()
-                print(f"'Привет, {name}!'")
+from functools import wraps
 
 
-def phrases_without_list(employees: list):    # без создания нового списка, по условию
-    for emp in employees:
-        name = ''
-        i = -1
-        while emp[i] != ' ':
-            name = name + emp[i]
-            i = i - 1
-        name = name[::-1]
-        print(f"'Привет, {name.capitalize()}!'")
+def third_dec(callback):
+    def one_more_function(func):
+        print('This is function', func)
+
+        @wraps(func)
+        def value_checker(*args):
+            print('args:', args)
+            # print('kwargs:', kwargs)
+            for arg in args:
+                if callback(arg) == False:
+                    raise ValueError(f'Wrong value {arg}')
+                else:
+                    print(func(*args), 'Type of result calc function:', type(func(*args)))
+
+            print('*' * 15)
+
+        return value_checker
+
+    return one_more_function
 
 
-def phrases_slice(employees: list):       # без создания списка, срез
-    for emp in employees:
-        for i in reversed(range(len(emp))):   # не получился цикл in range(len(emp), 0, -1)
-            if emp[i] == ' ':
-                name = emp[(i+1):]
-                print(f"'Привет, {name.capitalize()}!'")
-                break
+@third_dec(lambda x: x > 0)
+def calc_cube(x):
+    return x ** 3
 
 
-if __name__ == '__main__':
-    emp_list = ['Инженер-конструктор Игорь', 'главный бухгалтер МАРИНА',
-                'токарь высшего разряда нИКОЛАЙ', 'директор аэлита']
-    phrase_list(emp_list)
-    phrases_without_list(emp_list)
-    phrases_slice(emp_list)
+a = calc_cube(5)
+b = calc_cube(-5)
