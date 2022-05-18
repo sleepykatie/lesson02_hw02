@@ -1,29 +1,31 @@
-import os
+from functools import wraps
 
 
-def folder_stat(dir_path, key_list):
-    result_dict = {}
-    max_size = 0
-    for num in key_list:
-        result_dict.update({10 ** num: 0})
-    # print(result_dict)
-    for file in os.scandir(dir_path):
-        if 10**key_list[-1] >= file.stat().st_size >= 10**key_list[-2]:
-            result_dict[10**key_list[-1]] = result_dict[10**key_list[-1]] + 1
-        elif 10 ** key_list[-2] > file.stat().st_size >= 10 ** key_list[-3]:
-            result_dict[10 ** key_list[-2]] = result_dict[10 ** key_list[-2]] + 1
-        elif 10 ** key_list[-3] > file.stat().st_size >= 10 ** key_list[-4]:
-            result_dict[10 ** key_list[-3]] = result_dict[10 ** key_list[-3]] + 1
-        elif file.stat().st_size < 10 ** key_list[-4]:
-            result_dict[10 ** key_list[-4]] = result_dict[10 ** key_list[-4]] + 1
-        if file.stat().st_size > max_size:
-            max_size = file.stat().st_size
-    if max_size > 10**key_list[-1]:
-        print(f'attention, max file size more than {10**key_list[-1]}')
-    return result_dict
+def third_dec(callback):
+    def one_more_function(func):
+        print('This is function', func)
+
+        @wraps(func)
+        def value_checker(*args):
+            print('args:', args)
+            # print('kwargs:', kwargs)
+            for arg in args:
+                if callback(arg) == False:
+                    raise ValueError(f'Wrong value {arg}')
+                else:
+                    print(func(*args), 'Type of result calc function:', type(func(*args)))
+
+            print('*' * 15)
+
+        return value_checker
+
+    return one_more_function
 
 
-if __name__ == '__main__':
+@third_dec(lambda x: x > 0)
+def calc_cube(x):
+    return x ** 3
 
-    stat_keys = [2, 3, 4, 5]
-    print(folder_stat(os.path.join(os.getcwd(), 'task4', 'some_data'), stat_keys))
+
+a = calc_cube(5)
+b = calc_cube(-5)
