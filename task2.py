@@ -1,28 +1,22 @@
-my_list = ['в', '5', 'часов', '17', 'минут', 'температура',
-           'воздуха', 'была', '+5', 'градусов']
+class Road:
+    def __init__(self, length, width):
+        self._length = length   # m
+        self._width = width     # m
 
-for i in range(len(my_list)):
-    element = my_list[i]
-    marker = element.isdigit()
-    if marker:
-        value = int(element)
-        my_list[i] = ('{:0>2d}'.format(value))
-        my_list[i] = f'"{my_list[i]}"'
-    else:
-        value_aux = ''
-        for s in element:
-            marker_symbol = s.isdigit()
-            if marker_symbol:
-                value = int(s)
-                symbol = ('{:0>2d}'.format(value))
-                s = str(symbol)
-            value_aux += s
-            if marker_symbol:
-                my_list[i] = f'"{value_aux}"'
+    def calc_asphalt(self, thickness, dim_thickness, density_av=2400):
+        # density_av = 2400
+        # dim_density_av = 'kg/m^3'
+        if dim_thickness == 'mm':
+            thickness /= 1000
+        elif dim_thickness == 'cm':
+            thickness /= 100
+        elif dim_thickness == 'm':
+            thickness = thickness
+        v_asphalt = self._length * self._width * thickness
+        m_asphalt = (v_asphalt * density_av)/1000
 
-answer = ''
-for i in range(len(my_list)):
-    answer = answer + my_list[i] + ' '
-print(answer)
+        return f'{m_asphalt} t'
 
 
+interstate_60 = Road(1000000, 9)
+print(interstate_60.calc_asphalt(15, 'cm'))
