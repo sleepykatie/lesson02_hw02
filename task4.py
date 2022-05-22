@@ -1,5 +1,7 @@
+from random import randint
+
+
 class Car:
-    # is_police = False
 
     def __init__(self, speed, colour, name, is_police=False):
         self.speed = speed
@@ -63,25 +65,25 @@ class Policecar(Car):
     def __init__(self, speed, colour, name, is_police=True):
         super().__init__(speed, colour, name, is_police)
 
-car_01 = Towncar(78, 'green', 'Beetle')
+car_01 = Towncar(randint(0, 150), 'green', 'Beetle')
 print(f'{car_01.colour} {car_01.name}, {car_01.speed}, Is police? {car_01.is_police}')
 print(car_01.go())
 print(car_01.turn('LeFt'))
 print(car_01.show_speed())
 
-car_02 = Workcar(14, 'yellow', 'CAT')
+car_02 = Workcar(randint(0, 150), 'yellow', 'CAT')
 print(f'{car_02.colour} {car_02.name}, {car_02.speed}, Is police? {car_02.is_police}')
 print(car_02.go())
 print(car_02.turn('back'))
 print(car_02.show_speed())
 
-car_03 = Sportcar(129, 'red', 'Jaguar')
+car_03 = Sportcar(randint(0, 150), 'red', 'Jaguar')
 print(f'{car_03.colour} {car_03.name}, {car_03.speed}, Is police? {car_03.is_police}')
 print(car_03.go())
 print(car_03.turn('RIGHT'))
 print(car_03.show_speed())
 
-car_04 = Policecar(90, 'yellow', 'Dodge')
+car_04 = Policecar(randint(0, 150), 'yellow', 'Dodge')
 print(f'{car_04.colour} {car_04.name}, {car_04.speed}, Is police? {car_04.is_police}')
 print(car_04.go())
 print(car_04.turn('LeFt'))

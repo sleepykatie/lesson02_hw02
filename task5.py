@@ -1,58 +1,43 @@
-def order_ascend(price: list):      # B
-    print(sorted(price))
-    if price == basic_price_list:
-        print('Список не изменился')
-    else:
-        print('Список изменился')
-    return price
+class Stationary:
+
+    def __init__(self, title):
+        self.title = title
+
+    def draw(self):
+        return 'starting rendering'
 
 
-def order_descend(price: list):      #C
-    price.sort(reverse=True)
-    print(price)
-    if price == basic_price_list:
-        print('Список не изменился')
-    else:
-        print('Список изменился')
-    return price
+class Pen(Stationary):
+
+    def __init__(self, title):
+        super().__init__(title)
+
+    def draw(self):
+        return 'Starting rendering with a red pen'
+
+class Pensil(Stationary):
+
+    def __init__(self, title):
+        super().__init__(title)
+
+    def draw(self):
+        return 'Starting rendering with a blue pensil'
 
 
-def price_format(price: list):   # A
-    price_list_formatted = []
-    for number in price:
-        if type(number) == int:
-            number = float(number)
-        rub = number // 1
-        kop = int(round((number % 1 * 100), 2))
-        kop_int = ('{:0>2d}'.format(kop))
-        number = f'{int(rub)} руб. {kop_int} коп.'
-        price_list_formatted.append(number)
-        result = ', '.join(price_list_formatted)
-    return result
+class Handle(Stationary):
+
+    def __init__(self, title):
+        super().__init__(title)
+
+    def draw(self):
+        return 'Starting rendering with a yellow handle'
 
 
-def highest_price(price: list):    # D
-    price.sort()
-    result = price[(len(price)-5):len(price)]
-    return result
+draw_object_with_pen = Pen('Small round')
+print(f'{draw_object_with_pen.title}: {draw_object_with_pen.draw()}')
 
+draw_object_with_handle = Handle('Long line')
+print(f'{draw_object_with_handle.title}: {draw_object_with_handle.draw()}')
 
-if __name__ == '__main__':
-    basic_price_list = [57.8, 46.51, 97, 48.03, 52.78, 67.4,
-                  94.3, 30, 26.86, 34.7, 74.05, 6.59, 80.04]
-    price_list = [57.8, 46.51, 97, 48.03, 52.78, 67.4,
-                  94.3, 30, 26.86, 34.7, 74.05, 6.59, 80.04]
-    print('Task B')
-    price_list_ascend = order_ascend(price_list)
-    print(price_list_ascend)
-    print('Task C')
-    price_list_descend = order_descend(price_list)
-    print(price_list_descend)
-    print('Task A')
-    print(price_format(basic_price_list))
-    print('Task D')
-    print(highest_price(basic_price_list))
-
-
-
-
+draw_object_with_pensil = Pensil('Horizontal rectangle')
+print(f'{draw_object_with_pensil.title}: {draw_object_with_pensil.draw()}')
