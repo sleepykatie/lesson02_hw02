@@ -2,32 +2,18 @@ import re
 import datetime
 current_date = datetime.datetime.now()
 
-# re_date = re.compile(r'^(\d{2}-){2}\d{4}$')
-#
-# for date in ['23.01.1990', '12-03-1870', '9-12-784']:
-#     if re_date.match(date):
-#         print(date, "it's OK")
-#     else:
-#         print(f'Wrong date {date}')
-
 
 class Date:
 
     def __init__(self, date_str):
         re_date = re.compile(r'^(\d{2}-){2}\d{4}$')
-        if not re_date.match(date_str) and type(date_str) != str:
+        if not re_date.match(date_str) or type(date_str) != str:
             raise ValueError('Wrong format!')
         else:
             self.date_str = date_str
 
     @classmethod
     def date_to_int(cls, date_str):
-        # re_day = re.compile(r'^\d{2}')
-        # re_month = re.compile(r'-\d{2}')
-        # re_year = re.compile(r'-\d{4}$')
-        # day = re_day.match(date_str)
-        # month = re_month.match(date_str)
-        # year = re_year.match(date_str)
         date_parts = date_str.split('-')
         day = int(date_parts[0])
         month = int(date_parts[1])
