@@ -1,33 +1,23 @@
-from abc import ABC, abstractmethod
+class MyOwnZeroDivisionExc(Exception):
+    def __init__(self, text):
+        self.text = text
 
 
-class Clothes(ABC):
+divisible = input('Enter the divisible: ')
+divider = input('Enter the divider: ')
 
-    def __init__(self, main_param):
-        self.main_param = main_param
+# try:
+#     result = int(divisible)/int(divider)
+# except:
+#     print(MyOwnZeroDivisionExc('The divider is 0!'))
+# else:
+#     print('The result: ', result)
 
-    @abstractmethod
-    def consumption_fabric(self):
-        pass
-
-
-class Coat(Clothes):
-
-    @property
-    def consumption_fabric(self):
-        return self.main_param/6.5 + 0.5
-
-
-class Suit(Clothes):
-
-    @property
-    def consumption_fabric(self):
-        return 2 * self.main_param + 0.3
-
-
-blue_coat = Coat(46)
-beige_suit = Suit(1.74)
-sum_consump_fabric = blue_coat.consumption_fabric + beige_suit.consumption_fabric
-print(blue_coat.consumption_fabric)
-print(beige_suit.consumption_fabric)
-print(sum_consump_fabric)
+try:
+    if int(divider) == 0:
+        raise MyOwnZeroDivisionExc('The divider is 0!')
+    result = int(divisible) / int(divider)
+except MyOwnZeroDivisionExc as err:
+    print(err)
+else:
+    print('The result: ', result)
